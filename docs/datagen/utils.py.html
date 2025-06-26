@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>datagen/utils.py</title>
+<link href="../static/favicon.ico" rel="icon" type="image/x-icon"/>
+<link href="../static/page.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<nav>
+<div class="row">
+<div class="col-2 left">
+<a href="../">Home</a>
+</div>
+<div class="col-10 right">
+<a href="../license.html">License</a>
+	  ·
+	  <a href="../bibliography.html">Bibliography</a>
+	  ·
+	  <a href="../glossary.html">Glossary</a>
+</div>
+</div>
+</nav>
+<main>
+<h1>datagen/utils.py</h1>
+<pre><code>"""Data generation utilities."""
+
+from datetime import date, timedelta
+import json
+import random
+
+from pydantic import BaseModel
+
+
+def ensure_id_generator(cls, stem, digits):
+    """Ensure class has ID generator."""
+    if not hasattr(cls, "_id_gen"):
+        cls._id_gen = id_gen(stem, digits)
+
+
+def id_gen(stem, digits):
+    """Generate unique IDs of the form 'stemDDDD'."""
+    i = 1
+    while True:
+        temp = str(i)
+        assert len(temp) &lt;= digits, f"ID generation overflow {stem}: {i}"
+        yield f"{stem}{temp.zfill(digits)}"
+        i += 1
+
+
+def json_dump(obj, indent=2):
+    """Dump as JSON with custom serializer."""
+    return json.dumps(obj, indent=indent, default=_serialize_json)
+
+
+def random_date(date_min, date_max):
+    """Select random date in range (inclusive)."""
+    days = (date_max - date_min).days
+    days = random.randint(0, days + 1)
+    return date_min + timedelta(days=days)
+
+
+def _serialize_json(obj):
+    """Custom JSON serializer."""
+    if isinstance(obj, date):
+        return obj.isoformat()
+    if isinstance(obj, BaseModel):
+        return obj.model_dump()
+    raise TypeError(f"Type {type(obj)} not serializable")
+</code></pre>
+</main>
+<footer>
+<a href="../">The Webonomicon</a>
+      copyright © 2024
+      <a href="../contributing.html#contributors">the authors</a>
+</footer>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>datagen/person.py</title>
+<link href="../static/favicon.ico" rel="icon" type="image/x-icon"/>
+<link href="../static/page.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<nav>
+<div class="row">
+<div class="col-2 left">
+<a href="../">Home</a>
+</div>
+<div class="col-10 right">
+<a href="../license.html">License</a>
+	  ·
+	  <a href="../bibliography.html">Bibliography</a>
+	  ·
+	  <a href="../glossary.html">Glossary</a>
+</div>
+</div>
+</nav>
+<main>
+<h1>datagen/person.py</h1>
+<pre><code>"""Represent scientific staff."""
+
+import random
+
+import faker
+from pydantic import BaseModel, Field
+
+import utils
+
+
+class Person(BaseModel):
+    """A single person."""
+
+    id: str = Field(min_length=1, description="unique identifier")
+    family: str = Field(min_length=1, description="family name")
+    personal: str = Field(min_length=1, description="personal name")
+
+    @staticmethod
+    def make(params):
+        """Make a person."""
+        utils.ensure_id_generator(Person, "P", 4)
+        if not hasattr(Person, "_fake"):
+            Person._fake = faker.Faker(params.locale)
+            Person._fake.seed_instance(random.randint(0, 1_000_000))
+
+        return Person(
+            id=next(Person._id_gen),
+            family=Person._fake.last_name(),
+            personal=Person._fake.first_name(),
+        )
+
+    @staticmethod
+    def csv_header():
+        """Generate header for CSV file."""
+        return "id,family,personal"
+
+    def __str__(self):
+        """Convert to CSV string."""
+        return f"{self.id},{self.family},{self.personal}"
+</code></pre>
+</main>
+<footer>
+<a href="../">The Webonomicon</a>
+      copyright © 2024
+      <a href="../contributing.html#contributors">the authors</a>
+</footer>
+</body>
+</html>

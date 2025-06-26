@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>datagen/sample.py</title>
+<link href="../static/favicon.ico" rel="icon" type="image/x-icon"/>
+<link href="../static/page.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<nav>
+<div class="row">
+<div class="col-2 left">
+<a href="../">Home</a>
+</div>
+<div class="col-10 right">
+<a href="../license.html">License</a>
+	  ·
+	  <a href="../bibliography.html">Bibliography</a>
+	  ·
+	  <a href="../glossary.html">Glossary</a>
+</div>
+</div>
+</nav>
+<main>
+<h1>datagen/sample.py</h1>
+<pre><code>"""Samples."""
+
+from datetime import date
+import random
+
+from pydantic import BaseModel, Field
+
+import utils
+
+
+class Sample(BaseModel):
+    """Represent a single sample."""
+
+    id: str = Field(min_length=1, description="unique ID")
+    grid: str = Field(min_length=1, description="grid ID")
+    x: int = Field(ge=0, description="X coordinate")
+    y: int = Field(ge=0, description="Y coordinate")
+    person: str = Field(description="collector")
+    when: date = Field(description="when sample was collected")
+    mass: float = Field(gt=0.0, description="sample mass")
+
+    @staticmethod
+    def make(params, grids, persons):
+        """Make a sample."""
+        utils.ensure_id_generator(Sample, "S", 4)
+        grid = random.choice(grids)
+        x = random.randint(0, grid.size - 1)
+        y = random.randint(0, grid.size - 1)
+        person = random.choice(persons)
+        when = utils.random_date(params.sample_date_min, params.sample_date_max)
+        mass = round(
+            random.uniform(
+                params.sample_mass_min,
+                params.sample_mass_max,
+            ),
+            params.precision,
+        )
+        return Sample(
+            id=next(Sample._id_gen),
+            grid=grid.id,
+            x=x,
+            y=y,
+            person=person.id,
+            when=when,
+            mass=mass,
+        )
+
+    @staticmethod
+    def csv_header():
+        """Generate header for CSV file."""
+        return "sample_id,grid_id,x,y,person,when,mass"
+
+    def __str__(self):
+        """Convert to CSV string."""
+        return f"{self.id},{self.grid},{self.x},{self.y},{self.person},{self.when},{self.mass}"
+</code></pre>
+</main>
+<footer>
+<a href="../">The Webonomicon</a>
+      copyright © 2024
+      <a href="../contributing.html#contributors">the authors</a>
+</footer>
+</body>
+</html>

@@ -32,6 +32,7 @@ All contributors are required to respect our [Code of Conduct](./CODE_OF_CONDUCT
 <div class="chapters" markdown="1">
 
 1.  [Introduction](./01_intro/index.md): what we will learn, how to set up, and the data we will use
+1.  [HTTP](./02_http/index.md): how browsers and servers talk to each other
 
 </div>
 
