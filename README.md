@@ -33,6 +33,7 @@ All contributors are required to respect our [Code of Conduct](./CODE_OF_CONDUCT
 
 1.  [Introduction](./01_intro/index.md): what we will learn, how to set up, and the data we will use
 1.  [HTTP](./02_http/index.md): how browsers and servers talk to each other
+1.  [A Server](./03_server/index.md): building a server with [Flask][flask]
 
 </div>
 
@@ -63,6 +64,7 @@ All contributors are required to respect our [Code of Conduct](./CODE_OF_CONDUCT
 
 [alpine]: https://alpinejs.dev/
 [bs4]: https://beautiful-soup-4.readthedocs.io/
+[flask]: https://flask.palletsprojects.com/
 [htmx]: https://htmx.org/
 [httpx]: https://www.python-httpx.org/
 [polars]: https://pola.rs/
